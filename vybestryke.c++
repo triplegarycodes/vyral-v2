@@ -1,6 +1,37 @@
-// This code simulates a simple emotional wellness game for teens, focusing on emotional skills,
-// quizzes, and life scenarios. It can be expanded with more features, better UI, and
-// deeper emotional skill development pathways.
+#include <iostream>
+#include <string>
+#include <vector>
+#include <map>
+#include <random>
+#include <thread>
+#include <chrono>
+// --- Player Definition (VybeStrike) ---
+struct Player {
+    std::string name;
+    int level;
+    int xp; // Experience points
+    int vybePoints; // Points representing emotional wellness
+    int vybuX; // Virtual currency for in-game purchases
+    std::map<std::string, int> skills; // Emotional skills and their levels
+    // Constructor to initialize player with default values
+    Player(std::string playerName) : name(playerName), level(1), xp(0), vybePoints(100), vybuX(50) {
+        // Initialize emotional skills with default values
+        skills["Empathy"] = 0;
+        skills["Self-Awareness"] = 0;   
+        skills["Self-Esteem"] = 0;
+        skills["Emotional Regulation"] = 0;
+        skills["Social Skills"] = 0;
+        skills["Problem Solving"] = 0;
+        skills["Decision Making"] = 0;
+        skills["Stress Management"] = 0;
+        skills["Communication"] = 0;
+        skills["Conflict Resolution"] = 0;
+        skills["Active Listening"] = 0;
+        skills["Assertiveness"] = 0;
+        skills["Adaptability"] = 0;
+        skills["Mindfulness"] = 0;
+        skills["Gratitude"] = 0;
+        skills["Positive Thinking"] = 0;
         skills["Self-Control"] = 0;
         skills["Creativity"] = 0;
         skills["Resilience"] = 0;
@@ -158,6 +189,9 @@ struct LifeScenario {
 
 void presentLifeScenario(Player& player, const LifeScenario& scenario) {
     std::cout << "\n--- VybeStrike: Life Scenario! ---" << std::endl;
+    // Show the scenario prompt and explain choices
+    std::cout << scenario.prompt << std::endl;
+    std::cout << "Type 'good' for a positive response, or anything else for a negative response: ";
     std::string choice;
     std::cin >> choice;
 
@@ -166,19 +200,17 @@ void presentLifeScenario(Player& player, const LifeScenario& scenario) {
     for (auto& c : choice) c = std::tolower(static_cast<unsigned char>(c));
 
 
-    // A very simplified choice mechanism for demonstration.
-    // In a real game, this would involve deeper choices, skill checks, etc.
+    // Improved logic: positive outcome increases skill, negative decreases
     if (choice == "good") {
         std::cout << scenario.outcomePositive << std::endl;
         player.vybePoints += scenario.vybePointsChangePositive;
         player.gainXP(scenario.xpChangePositive);
-        player.updateSkill(scenario.skillToInfluence, -(scenario.skillInfluenceAmount / 2)); // Small skill decrease
+        player.updateSkill(scenario.skillToInfluence, scenario.skillInfluenceAmount); // Increase skill
     } else {
         std::cout << scenario.outcomeNegative << std::endl;
-        player.vybePoints += scenario.vybePointsChangeNegative; // Negative change will reduce points
+        player.vybePoints += scenario.vybePointsChangeNegative;
         player.gainXP(scenario.xpChangeNegative);
-        // Currently, only a skill decrease is applied for a negative outcome; gaining a 'negative' trait is not implemented.
-        player.updateSkill(scenario.skillToInfluence, -scenario.skillInfluenceAmount / 2); // Small skill decrease
+        player.updateSkill(scenario.skillToInfluence, -scenario.skillInfluenceAmount); // Decrease skill
     }
     std::cout << "Current Vybe Points: " << player.vybePoints << std::endl;
     std::cout << "----------------------" << std::endl;
