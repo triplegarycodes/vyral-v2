@@ -1,0 +1,6 @@
+services:
+  vyralv2:
+    image: vyralv2
+    build:
+      context: .
+      dockerfile: ./Dockerfile
